@@ -10,6 +10,7 @@ class ContextGlobal {
 
 TimeOfDay FastingStart = TimeOfDay.now();
 TimeOfDay FastingEnd = TimeOfDay.now();
+int? type;
 
 
 Future<void> setupDailyNotification() async {
