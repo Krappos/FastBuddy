@@ -5,9 +5,20 @@ import 'Android_alarm.dart';
 // Definovanie premenných
 TimeOfDay? FastingStart;
 TimeOfDay? FastingEnd;
-int? FastingType;
+int FastingType = 0;
 
 
+
+Future <void> MdlGetType() async{
+
+  final prefs = await SharedPreferences.getInstance();
+ final FastingType = prefs.getInt('fasting_type');
+
+  if(FastingType == 0){
+    print("chyba pri načítaní času");
+  }
+
+}
 
 // Získanie hodnoty zo start inputu
 void MetGetStart(BuildContext context, TimeOfDay time) {
@@ -34,9 +45,9 @@ Future<void> MtdGetInput(BuildContext context, String selected) async {
 
     }
 
-    if (FastingStart != null && FastingEnd != null) {
-      await Shared_Time(context, FastingStart!, FastingEnd!);
-    }
+    //if (FastingStart != null && FastingEnd != null) {
+     // await Shared_Time(context, FastingStart!, FastingEnd!);
+   // }
     
   } catch (e) {
     debugPrint('Chyba pri spracovaní výberu pôstu: $e');
@@ -44,9 +55,6 @@ Future<void> MtdGetInput(BuildContext context, String selected) async {
   }
 }
 //FastingEnd = addHoursToTime(FastingStart, 4);
-
-
-
 
 // Uloženie času do SharedPreferences
 Future<void> Shared_Time(BuildContext context, TimeOfDay zaciatok, TimeOfDay koniec) async {
@@ -58,6 +66,7 @@ Future<void> Shared_Time(BuildContext context, TimeOfDay zaciatok, TimeOfDay kon
       prefs.setInt('fasting_start_minute', zaciatok.minute),
       prefs.setInt('fasting_end_hour', koniec.hour),
       prefs.setInt('fasting_end_minute', koniec.minute),
+      prefs.setInt('fasting_type', FastingType),
 
       prefs.setString('fasting_text', "${zaciatok.format(context)} - ${koniec.format(context)}"),
     ]);
@@ -65,7 +74,9 @@ Future<void> Shared_Time(BuildContext context, TimeOfDay zaciatok, TimeOfDay kon
     // Aktualizácia globálnych premenných
     FastingStart = zaciatok;
     FastingEnd = koniec;
+    
      setupDailyNotification();
+
   } catch (e) {
     debugPrint('Chyba pri ukladaní času: $e');
     rethrow;
