@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:workmanager/workmanager.dart';
 import 'Android_alarm.dart';
 import 'HomeScreen.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'background_task.dart';
 
 class ContextGlobal {
   static late BuildContext context;
@@ -12,7 +14,6 @@ class ContextGlobal {
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
-//povolenie notifikácie na začiatku programu
 Future<void> requestNotificationPermission() async {
   final status = await Permission.notification.status;
 
@@ -20,20 +21,38 @@ Future<void> requestNotificationPermission() async {
     await Permission.notification.request();
   }
 }
-//nevymienať
+
 Future<void> main() async {
-
-
   WidgetsFlutterBinding.ensureInitialized();
 
   await requestNotificationPermission();
   await AndroidAlarmManager.initialize();
+
+  // Inicializuj Workmanager
+  await Workmanager().initialize(
+    callbackDispatcher,
+    isInDebugMode: false,
+  );
+
+  // Spusti background task každých 24 hodín
+  await Workmanager().registerPeriodicTask(
+    "uniqueCheckFastingAlarm",
+    "checkFastingAlarmTask",
+    frequency: const Duration(hours: 24),
+    initialDelay: const Duration(minutes: 1), // pre testovanie
+    constraints: Constraints(
+      networkType: NetworkType.not_required,
+      requiresBatteryNotLow: false,
+      requiresCharging: false,
+    ),
+  );
+
+  // Nastav notifikáciu na základe času (prvýkrát)
   await setupDailyNotification();
 
   runApp(const MyApp());
-
 }
-//nevymieniať 
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
