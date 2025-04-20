@@ -8,7 +8,6 @@ class ContextGlobal {
   static late BuildContext context;
 }
 
-
 TimeOfDay FastingStart = TimeOfDay.now();
 TimeOfDay FastingEnd = TimeOfDay.now();
 int month_pref = 0;
@@ -23,6 +22,9 @@ Future<void> setupDailyNotification() async {
   var startTime = DateTime(now.year, month_pref, day_pref, FastingStart.hour, FastingStart.minute);
   var endTime = DateTime(now.year, month_pref, day_pref, FastingEnd.hour, FastingEnd.minute);
 
+print("datetime <3");
+print(startTime);
+print(endTime);
 //ak čas prešiel alert posunie sa o deň
   if (startTime.isBefore(now)) {
     startTime = startTime.add(const Duration(days: 1));
@@ -31,6 +33,9 @@ Future<void> setupDailyNotification() async {
   if (endTime.isBefore(now)) {
     endTime = endTime.add(const Duration(days: 1));
   }
+  if (endTime.isBefore(startTime)) {
+  endTime = endTime.add(const Duration(days: 1));
+}
 
   // Zrušenie existujúcich alarmov
   await AndroidAlarmManager.cancel(1);

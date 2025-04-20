@@ -47,7 +47,7 @@ Future<void> main() async {
   );
 
 
-  await setupDailyNotification();
+  //await setupDailyNotification();
 
   runApp(const MyApp());
 }
