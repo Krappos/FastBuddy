@@ -28,18 +28,17 @@ Future<void> main() async {
   await requestNotificationPermission();
   await AndroidAlarmManager.initialize();
 
-  // Inicializuj Workmanager
+
   await Workmanager().initialize(
     callbackDispatcher,
     isInDebugMode: false,
   );
 
-  // Spusti background task každých 24 hodín
   await Workmanager().registerPeriodicTask(
     "uniqueCheckFastingAlarm",
     "checkFastingAlarmTask",
     frequency: const Duration(hours: 24),
-    initialDelay: const Duration(minutes: 1), // pre testovanie
+    initialDelay: const Duration(minutes: 1), 
     constraints: Constraints(
       networkType: NetworkType.not_required,
       requiresBatteryNotLow: false,
@@ -47,7 +46,7 @@ Future<void> main() async {
     ),
   );
 
-  // Nastav notifikáciu na základe času (prvýkrát)
+
   await setupDailyNotification();
 
   runApp(const MyApp());

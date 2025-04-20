@@ -4,7 +4,7 @@ import 'Android_alarm.dart';
 @pragma('vm:entry-point')
 void callbackDispatcher() {
   Workmanager().executeTask((taskName, inputData) async {
-    await setupDailyNotification(); // skontroluje a nastaví nový alarm
+    await setupDailyNotification();
     return Future.value(true);
   });
 }

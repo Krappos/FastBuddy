@@ -27,7 +27,7 @@ class Homescreen extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(top: 95),
                     child: Text(
-                      daysSince(), // Zavolanie funkcie pre zistenie počtu dní
+                      daysSince(), 
                       style: TextStyle(
                         fontSize: 80,
                         color: const Color.fromARGB(255, 255, 255, 255),
@@ -35,14 +35,12 @@ class Homescreen extends StatelessWidget {
                     ),
                   ),
                 
-
  Spacer(),
  Spacer(),
                 Text("ppuuff" , style: TextStyle(
                   fontSize: 40,
                   color: const Color.fromRGBO(50, 222, 235, 1)
                 ),),
-                  // Dolná časť s časovačom
                   Spacer(),
                   Container(child:  ElevatedButton(
                     onPressed: () async {
