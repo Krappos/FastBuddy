@@ -7,27 +7,33 @@ TimeOfDay? FastingStart;
 TimeOfDay? FastingEnd;
 int FastingType = 0;
 
-
+void TrySharedTime(BuildContext context) {
+  if (FastingStart != null && FastingType != 0) {
+    FastingEnd = addHoursToTime(FastingStart, FastingType);
+    Shared_Time(context, FastingStart!, FastingEnd!);
+  }
+}
 
 Future <void> MdlGetType() async{
-
-  final prefs = await SharedPreferences.getInstance();
- final FastingType = prefs.getInt('fasting_type');
-
-  if(FastingType == 0){
-    print("chyba pri načítaní času");
+  try {
+    final prefs = await SharedPreferences.getInstance();
+    FastingType = prefs.getInt('fasting_type') ?? 0;
+    
+  } catch (e) {
+    print("Chyba pri načítaní typu pôstu");
   }
 
 }
-
-// Získanie hodnoty zo start inputu
 void MetGetStart(BuildContext context, TimeOfDay time) {
   FastingStart = time;
   debugPrint("FastingStart: ${time.format(context)}");
+TrySharedTime(context);
+  if (FastingStart != null && FastingType != 0) {
+    FastingEnd = addHoursToTime(FastingStart, FastingType);
+    Shared_Time(context, FastingStart!, FastingEnd!);
+  }
 }
 
-
-// Získanie hodnoty z výberu (napr. 16:8, 18:6, 20:4)
 Future<void> MtdGetInput(BuildContext context, String selected) async {
   try {
     switch (selected) {
@@ -36,29 +42,26 @@ Future<void> MtdGetInput(BuildContext context, String selected) async {
         break;
 
       case "18:6":
-        FastingType=4;
+        FastingType=6;
         break;
 
       case "16:8":
-        FastingType=4;
+        FastingType=8;
         break;
 
     }
+    TrySharedTime(context);
+  if (FastingStart != null && FastingType != 0) {
+      FastingEnd = addHoursToTime(FastingStart, FastingType);
+      Shared_Time(context, FastingStart!, FastingEnd!);
+    }
 
-
-// táto funckia zabezpečuje že sa fasting time uklada do shared prefs 
-
-  
-
-    
   } catch (e) {
     debugPrint('Chyba pri spracovaní výberu pôstu: $e');
     rethrow;
   }
 }
-//FastingEnd = addHoursToTime(FastingStart, 4);
 
-// Uloženie času do SharedPreferences
 Future<void> Shared_Time(BuildContext context, TimeOfDay zaciatok, TimeOfDay koniec) async {
   try {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -73,7 +76,6 @@ Future<void> Shared_Time(BuildContext context, TimeOfDay zaciatok, TimeOfDay kon
       prefs.setString('fasting_text', "${zaciatok.format(context)} - ${koniec.format(context)}"),
     ]);
 
-    // Aktualizácia globálnych premenných
     FastingStart = zaciatok;
     FastingEnd = koniec;
     
@@ -85,14 +87,6 @@ Future<void> Shared_Time(BuildContext context, TimeOfDay zaciatok, TimeOfDay kon
   }
 }
 
-
-  //if (FastingStart != null && FastingEnd != null) {
-     // await Shared_Time(context, FastingStart!, FastingEnd!);
-   // }
-
-
-
-// Funkcia na výpočet 
 TimeOfDay addHoursToTime(TimeOfDay? startTime, int FastingType) {
   if (startTime == null) return TimeOfDay(hour: 0, minute: 0);
 
@@ -100,10 +94,4 @@ TimeOfDay addHoursToTime(TimeOfDay? startTime, int FastingType) {
   int newMinute = startTime.minute;
 
   return TimeOfDay(hour: newHour, minute: newMinute);
-}
-
-// Nová funkcia pre získanie uloženého textu pôstu
-Future<String?> getFastingText() async {
-  final prefs = await SharedPreferences.getInstance();
-  return prefs.getString('fasting_text');
 }
