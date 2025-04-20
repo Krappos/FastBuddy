@@ -45,9 +45,11 @@ Future<void> MtdGetInput(BuildContext context, String selected) async {
 
     }
 
-    //if (FastingStart != null && FastingEnd != null) {
-     // await Shared_Time(context, FastingStart!, FastingEnd!);
-   // }
+
+// táto funckia zabezpečuje že sa fasting time uklada do shared prefs 
+
+  
+
     
   } catch (e) {
     debugPrint('Chyba pri spracovaní výberu pôstu: $e');
@@ -83,6 +85,10 @@ Future<void> Shared_Time(BuildContext context, TimeOfDay zaciatok, TimeOfDay kon
   }
 }
 
+
+  //if (FastingStart != null && FastingEnd != null) {
+     // await Shared_Time(context, FastingStart!, FastingEnd!);
+   // }
 
 
 
