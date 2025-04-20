@@ -1,3 +1,4 @@
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Android_alarm.dart';
@@ -6,6 +7,7 @@ import 'Android_alarm.dart';
 TimeOfDay? FastingStart;
 TimeOfDay? FastingEnd;
 int FastingType = 0;
+TimeOfDay? Date;
 
 void TrySharedTime(BuildContext context) {
   if (FastingStart != null && FastingType != 0) {
@@ -65,14 +67,15 @@ Future<void> MtdGetInput(BuildContext context, String selected) async {
 Future<void> Shared_Time(BuildContext context, TimeOfDay zaciatok, TimeOfDay koniec) async {
   try {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-
+    final date_monts = DateTime.now();
     await Future.wait([
       prefs.setInt('fasting_start_hour', zaciatok.hour),
       prefs.setInt('fasting_start_minute', zaciatok.minute),
       prefs.setInt('fasting_end_hour', koniec.hour),
       prefs.setInt('fasting_end_minute', koniec.minute),
       prefs.setInt('fasting_type', FastingType),
-
+      prefs.setInt('fasting_day', date_monts.day ),
+      prefs.setInt('fasting_month', date_monts.month),
       prefs.setString('fasting_text', "${zaciatok.format(context)} - ${koniec.format(context)}"),
     ]);
 
