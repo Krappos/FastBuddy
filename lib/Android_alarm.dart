@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'modules/Mdl_Alerts.dart';
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -8,24 +7,21 @@ class ContextGlobal {
   static late BuildContext context;
 }
 
+
 TimeOfDay FastingStart = TimeOfDay.now();
 TimeOfDay FastingEnd = TimeOfDay.now();
-int month_pref = 0;
-int day_pref =0;
+
+
 Future<void> setupDailyNotification() async {
 
- await _loadFastingTimes();
+  await _loadFastingTimes();
 
   final now = DateTime.now();
 
+  var startTime = DateTime(now.year, now.month, now.day, FastingStart.hour, FastingStart.minute);
+  var endTime = DateTime(now.year, now.month, now.day, FastingEnd.hour, FastingEnd.minute);
 
-  var startTime = DateTime(now.year, month_pref, day_pref, FastingStart.hour, FastingStart.minute);
-  var endTime = DateTime(now.year, month_pref, day_pref, FastingEnd.hour, FastingEnd.minute);
-
-print("datetime <3");
-print(startTime);
-print(endTime);
-//ak čas prešiel alert posunie sa o deň
+  // Zabezpečiť, že notifikácie sú v budúcnosti
   if (startTime.isBefore(now)) {
     startTime = startTime.add(const Duration(days: 1));
   }
@@ -33,14 +29,12 @@ print(endTime);
   if (endTime.isBefore(now)) {
     endTime = endTime.add(const Duration(days: 1));
   }
-  if (endTime.isBefore(startTime)) {
-  endTime = endTime.add(const Duration(days: 1));
-}
 
   // Zrušenie existujúcich alarmov
   await AndroidAlarmManager.cancel(1);
   await AndroidAlarmManager.cancel(2);
 
+  // Nastavenie alarmov na presný čas
   await AndroidAlarmManager.oneShotAt(
     startTime,
     1,
@@ -89,8 +83,6 @@ Future<void> _loadFastingTimes() async {
   final startMinute = prefs.getInt('fasting_start_minute');
   final endHour = prefs.getInt('fasting_end_hour');
   final endMinute = prefs.getInt('fasting_end_minute');
-  final day_pref = prefs.getInt('fasting_day');
-  final month_pref = prefs.getInt('fasting_month');
 
   if (startHour != null && startMinute != null) {
     FastingStart = TimeOfDay(hour: startHour, minute: startMinute);
