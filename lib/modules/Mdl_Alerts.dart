@@ -14,6 +14,7 @@ Future<void> initializeNotifications() async {
   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 }
 
+//first alert 
 @pragma('vm:entry-point')
 Future<void> showFastingNotification() async {
   const AndroidNotificationDetails androidDetails =AndroidNotificationDetails(

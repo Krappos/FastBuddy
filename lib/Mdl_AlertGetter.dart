@@ -6,6 +6,12 @@ import 'package:flutter/material.dart';
  TimeOfDay? FastingStart;
  TimeOfDay? FastingEnd;
  
+//premenne definové  na vypis 
+ String Vypis1='${FastingStart!.hour.toString().padLeft(2, '0')}:${FastingStart!.minute.toString().padLeft(2, '0')}';
+ String Vypis2='${FastingEnd!.hour.toString().padLeft(2, '0')}:${FastingEnd!.minute.toString().padLeft(2, '0')}';
+ 
+ String vypis3 = "🔔" + Vypis1 + "-" + Vypis2;
+
  void MetGetStart(BuildContext context, TimeOfDay time) {
    FastingStart = time;
    debugPrint("FastingStart: ${time.format(context)}");
