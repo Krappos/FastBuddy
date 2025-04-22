@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'modules/Mdl_Alerts.dart';
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,13 +11,20 @@ class ContextGlobal {
 
 TimeOfDay FastingStart = TimeOfDay.now();
 TimeOfDay FastingEnd = TimeOfDay.now();
-
+DateTime teraz = DateTime.now();
 
 Future<void> setupDailyNotification() async {
 
   await _loadFastingTimes();
 
   final now = DateTime.now();
+  final dayz= now.day;
+
+//vypis datumu 
+  print(dayz);
+  print(now.month);
+
+
 
 
   var startTime = DateTime(now.year, now.month, now.day, FastingStart.hour, FastingStart.minute);
@@ -28,6 +36,11 @@ Future<void> setupDailyNotification() async {
   }
 
   if (endTime.isBefore(now)) {
+    endTime = endTime.add(const Duration(days: 1));
+  }
+
+  //ak je endtime skor ako start tak sa posunie o den dalej
+  if (endTime.isBefore(startTime)) {
     endTime = endTime.add(const Duration(days: 1));
   }
 
@@ -55,28 +68,7 @@ Future<void> setupDailyNotification() async {
   );
 
   debugPrint('🔔 Alarms set for: Start - ${startTime.toString()}, End - ${endTime.toString()}');
-}
-
-Future<void> updateFastingTimes(TimeOfDay newStart, TimeOfDay newEnd) async {
-  final prefs = await SharedPreferences.getInstance();
-  
-  // Uloženie nových časov do SharedPreferences
-  await prefs.setInt('fasting_start_hour', newStart.hour);
-  await prefs.setInt('fasting_start_minute', newStart.minute);
-  await prefs.setInt('fasting_end_hour', newEnd.hour);
-  await prefs.setInt('fasting_end_minute', newEnd.minute);
-  
-  // Aktualizácia lokálnych premenných
-  FastingStart = newStart;
-  FastingEnd = newEnd;
-  
-  // Hneď po nastavení nových časov znovu nastavíme notifikácie
-  await setupDailyNotification();
-
-  debugPrint('🕒 Nové časy pôstu nastavené: Start - ${FastingStart.format(ContextGlobal.context)}, End - ${FastingEnd.format(ContextGlobal.context)}');
-}
-
-//len deklaruje začiatok a koniec casovania
+}//len deklaruje začiatok a koniec casovania
 Future<void> _loadFastingTimes() async {
   final prefs = await SharedPreferences.getInstance();
 
