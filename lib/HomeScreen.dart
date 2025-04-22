@@ -51,7 +51,7 @@ class Homescreen extends StatelessWidget {
                       if (pickedTime != null) {
                         MetGetStart(context, pickedTime); 
                         print("Nastavený začiatok pôstu: ${pickedTime.format(context)}");
-                      }
+                      } 
                     },
                     child: Text('Start time'),
                   ),),

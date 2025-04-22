@@ -18,6 +18,7 @@ Future<void> setupDailyNotification() async {
 
   final now = DateTime.now();
 
+
   var startTime = DateTime(now.year, now.month, now.day, FastingStart.hour, FastingStart.minute);
   var endTime = DateTime(now.year, now.month, now.day, FastingEnd.hour, FastingEnd.minute);
 

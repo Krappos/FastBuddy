@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:workmanager/workmanager.dart';
 import 'Android_alarm.dart';
 import 'HomeScreen.dart';
-import 'background_task.dart';
 
 class ContextGlobal {
   static late BuildContext context;
@@ -28,26 +26,7 @@ Future<void> main() async {
   await requestNotificationPermission();
   await AndroidAlarmManager.initialize();
 
-
-  await Workmanager().initialize(
-    callbackDispatcher,
-    isInDebugMode: false,
-  );
-
-  await Workmanager().registerPeriodicTask(
-    "uniqueCheckFastingAlarm",
-    "checkFastingAlarmTask",
-    frequency: const Duration(hours: 24),
-    initialDelay: const Duration(minutes: 1), 
-    constraints: Constraints(
-      networkType: NetworkType.not_required,
-      requiresBatteryNotLow: false,
-      requiresCharging: false,
-    ),
-  );
-
-
-  //await setupDailyNotification();
+  await setupDailyNotification();
 
   runApp(const MyApp());
 }
