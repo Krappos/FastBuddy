@@ -1,7 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:workmanager/workmanager.dart';
+import 'package:flutter/material.dart';
+import 'modules/Mdl_workM.dart';
 import 'Android_alarm.dart';
 import 'HomeScreen.dart';
 
@@ -22,10 +24,10 @@ Future<void> requestNotificationPermission() async {
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  await Workmanager().initialize(callbackDispatcher); // Iniciuje WorkManager
+  await setPeriodicTask(); // Zavoláš svoju funkciu na nastavenie periodickej úlohy
   await requestNotificationPermission();
   await AndroidAlarmManager.initialize();
-
   await setupDailyNotification();
 
   runApp(const MyApp());

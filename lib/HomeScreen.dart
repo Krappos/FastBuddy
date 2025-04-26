@@ -1,7 +1,7 @@
 //import 'package:apka2/modules/Mdl_Alerts.dart';
 import 'package:flutter/material.dart';
 import 'Libraries/functions.dart';
-import 'Mdl_AlertGetter.dart';
+import 'modules/Mdl_AlertGetter.dart';
 
 class Homescreen extends StatelessWidget {
   const Homescreen({super.key});
